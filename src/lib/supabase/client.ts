@@ -7,6 +7,11 @@ import type { SupabaseClient } from '@supabase/supabase-js'
 let browserClient: SupabaseClient | undefined
 
 export function createClient() {
+  if (typeof window === "undefined") {
+    // Avoid creating a browser Supabase client during server-side prerender / build.
+    return undefined as unknown as SupabaseClient
+  }
+
   if (browserClient) return browserClient
 
   browserClient = createBrowserClient(
